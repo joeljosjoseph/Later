@@ -5,6 +5,7 @@ A task manager built for professional procrastinators.
 Later™ looks like a normal to-do app, but it is on your side in the worst way: press Start on a task and it always finds a "better time" to begin. It only stops enabling you when the deadline is under an hour away, and then it drops the act.
 
 ![Later app screenshot](image.png)
+
 Features
 Delay Engine: "Start" never starts anything. It pushes your planned start time later and gives you a reason ("Starting now would be rushing. Quality takes patience.").
 Panic Index: every task gets a progress bar and a mood, from "Relax" to "Why are you still on this app?".
