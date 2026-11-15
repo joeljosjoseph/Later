@@ -66,3 +66,12 @@ def get_excuse():
 
 def get_delay_reason():
     return f"{random.choice(DELAY_REASONS)}"
+
+
+def get_completion_message(tries):
+    if tries >= 5:
+        return f"And it took you {tries} tries to complete it..."
+    elif tries >= 2:
+        return f"And you delayed it {tries} times. Not bad for a professional procrastinator."
+    else:
+        return f"And you only delayed it {tries} times? You're a fake procrastinator."

@@ -1,7 +1,8 @@
 import json
 from task import Task
+from pathlib import Path
 
-SAVE_FILE = "tasks.json"
+SAVE_FILE = Path.home() / ".later_tasks.json"
 
 def save_tasks(tasks):
     with open(SAVE_FILE, "w") as f:
