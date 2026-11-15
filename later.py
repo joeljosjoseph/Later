@@ -198,7 +198,11 @@ def list_tasks(tasksOnly = False):
             extra_info = ""
 
             if not tasksOnly:
-                extra_info = f" {t.panic_bar()} {t.panic_level()}"
+                extra_info = (
+                    f"Start: {t.start_time.strftime('%H:%M')} "
+                    f"(delayed {t.get_delayed_times()}x) "
+                    f"{t.panic_bar()} {t.panic_level()}"
+                )
 
             print(f"{i}. {t.task_name()} is due in {t.time_left_text()}. {extra_info}")
 
