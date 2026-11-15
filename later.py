@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
 import random
+import json
+
+SAVE_FILE = "tasks.json"
 
 SUGGESTIONS = [
     "Reorganize your desktop icons first. It's basically prep work.",
@@ -135,9 +138,27 @@ class Task:
 
         return "[" + "#" * filled + "-" * (10 - filled) + "]"
 
-    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "deadline": self.deadline.isoformat(),
+            "start_time": self.start_time.isoformat(),
+            "times_delayed": self.get_delayed_times(),
+        }
+
+    def is_panic(self):
+            return 0 < self.hours_left() < 1
+
+    @staticmethod
+    def from_dict(d):
+        t = Task(d["name"], datetime.fromisoformat(d["deadline"]))
+        t.start_time = datetime.fromisoformat(d["start_time"])
+        t.times_delayed = d["times_delayed"]
+        return t
+
     def __str__(self):
         return f"{self.name} due at {self.deadline.strftime("%Y-%m-%d %H:%M")}"
+
 
 
 
@@ -157,6 +178,7 @@ def add_task():
     
     t = Task(name, datetime.now() + timedelta(hours=deadline))
     tasks.append(t)
+    save_tasks()
 
 def start_task():
 
@@ -175,6 +197,11 @@ def start_task():
             return
 
         t = tasks[task_num - 1]
+
+        if t.is_panic():
+            print(f"You have {t.time_left_text()} to complete it and you want to DELAY it?")
+            print("Do you wanna be a failure or a success? GET TO WORK!!!")
+            return
         t.delay()
 
         print(
@@ -182,10 +209,18 @@ def start_task():
             f"{t.start_time.strftime('%H:%M')} is a better time to start."
         )
         print(get_delay_reason())
+        save_tasks()
 
     except ValueError:
         print("Thats not a number bro!?")
         return
+
+def check_panic_tasks():
+    for t in tasks:
+        if t.is_panic():
+            print(f"🚨 '{t.name}' is due in {t.time_left_text()}. Why are you here?")
+        elif t.hours_left() < 0:
+            print(f"💀 '{t.name}' is overdue. You done done fr!")
     
 
 def list_tasks(tasksOnly = False):
@@ -244,11 +279,26 @@ def complete_task():
             )
 
         print(delayed_message)
+        save_tasks()
 
     except ValueError:
         print("Thats not a number bro!?")
 
+def save_tasks():
+    with open(SAVE_FILE, "w") as f:
+        json.dump([t.to_dict() for t in tasks], f, indent=2)
+
+def load_tasks():
+    try:
+        with open(SAVE_FILE) as f:
+            for d in json.load(f):
+                tasks.append(Task.from_dict(d))
+    except FileNotFoundError:
+        pass   # first run: no file yet, that's fine
+
 def main():
+    load_tasks()
+    check_panic_tasks()
     while True:
         print("\n1) Add task 2) Start Task 3) List tasks 4) Complete Task 5) Get a suggestion 6) Generate Excuse 7) Quit")
         choice = input("Whats the plan? ").strip()
