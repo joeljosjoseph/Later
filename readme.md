@@ -22,7 +22,7 @@ Later™ looks like a normal to-do app, but it is on your side in the worst way:
 Requires Python 3.9+ (tkinter comes with Python on Windows and macOS).
 
 ```
-git clone https://github.com/YOUR-USERNAME/later.git
+git clone https://github.com/joeljosjoseph/later.git
 cd later
 py gui.py        # desktop window
 py later.py      # terminal version
